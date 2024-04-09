@@ -18,11 +18,17 @@ export class ParamAllocator {
 
   public buildSqlAndParams(annotatedSql: string, exportAnnotatedSql?: boolean): [string, unknown[]] {
     const paramsInSqlOrder: unknown[] = [];
+    const paramIndexMap: Record<string, number> = {};
 
     return [
       annotatedSql.replace(PARAMS_MATCH_REGEXP, (match, paramIndex) => {
-        paramsInSqlOrder.push(this.params[paramIndex]);
-        return exportAnnotatedSql ? `$${paramsInSqlOrder.length - 1}$` : this.paramPlaceHolder(paramsInSqlOrder.length - 1);
+        let newIndex = paramIndexMap[paramIndex];
+        if (typeof newIndex !== 'number') {
+          newIndex = paramsInSqlOrder.length;
+          paramIndexMap[paramIndex] = newIndex;
+          paramsInSqlOrder.push(this.params[paramIndex]);
+        }
+        return exportAnnotatedSql ? `$${newIndex}$` : this.paramPlaceHolder(newIndex);
       }),
       paramsInSqlOrder
     ];
