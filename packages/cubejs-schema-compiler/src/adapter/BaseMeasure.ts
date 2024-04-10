@@ -50,9 +50,19 @@ export class BaseMeasure {
 
   public measureSql() {
     if (this.expression) {
-      return this.query.evaluateSymbolSql(this.expressionCubeName, this.expressionName, this.definition(), 'measure');
+      return this.convertTzForRawTimeDimensionIfNeeded(() => this.query.evaluateSymbolSql(this.expressionCubeName, this.expressionName, this.definition(), 'measure'));
     }
     return this.query.measureSql(this);
+  }
+
+  public convertTzForRawTimeDimensionIfNeeded(sql) {
+    if (this.query.options.convertTzForRawTimeDimension) {
+      return this.query.evaluateSymbolSqlWithContext(sql, {
+        convertTzForRawTimeDimension: true
+      })
+    } else {
+      return sql()
+    }
   }
 
   public cube() {
