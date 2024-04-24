@@ -1754,39 +1754,6 @@ impl RewriteRules for FilterRules {
                 ),
             ),
             transforming_rewrite(
-                "filter-date-trunc-leeq",
-                filter_replacer(
-                    binary_expr(
-                        fun_expr(
-                            "DateTrunc",
-                            vec![literal_expr("?granularity"), column_expr("?column")],
-                        ),
-                        "<=",
-                        fun_expr(
-                            "DateTrunc",
-                            vec![literal_expr("?granularity"), "?expr".to_string()],
-                        ),
-                    ),
-                    "?alias_to_cube",
-                    "?members",
-                    "?filter_aliases",
-                ),
-                filter_replacer(
-                    binary_expr(
-                        column_expr("?column"),
-                        "<=",
-                        fun_expr(
-                            "DateTrunc",
-                            vec![literal_expr("?granularity"), "?expr".to_string()],
-                        ),
-                    ),
-                    "?alias_to_cube",
-                    "?members",
-                    "?filter_aliases",
-                ),
-                self.transform_granularity_to_interval("?granularity", "?interval"),
-            ),
-            transforming_rewrite(
                 "filter-date-trunc-sub-leeq",
                 filter_replacer(
                     binary_expr(
@@ -3989,10 +3956,8 @@ impl FilterRules {
         move |egraph, subst| {
             for op in var_iter!(egraph[subst[op_var]], BinaryExprOp) {
                 let new_op = match op {
-                    Operator::GtEq => Operator::GtEq,
-                    Operator::Gt => Operator::Gt,
-                    Operator::LtEq => Operator::LtEq,
-                    Operator::Lt => Operator::Lt,
+                    Operator::GtEq | Operator::Gt => Operator::GtEq,
+                    Operator::LtEq | Operator::Lt => Operator::Lt,
                     _ => continue,
                 };
 
@@ -4002,7 +3967,7 @@ impl FilterRules {
                             utils::granularity_str_to_interval(&granularity),
                             match op {
                                 Operator::GtEq | Operator::Lt => {
-                                    utils::granularity_str_to_interval("second")
+                                    utils::granularity_str_to_interval("min_unit")
                                 }
                                 Operator::Gt | Operator::LtEq => {
                                     Some(ScalarValue::IntervalDayTime(Some(0)))
