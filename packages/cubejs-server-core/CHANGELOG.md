@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.67](https://github.com/cube-js/cube/compare/v0.35.66...v0.35.67) (2024-08-07)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.66](https://github.com/cube-js/cube/compare/v0.35.65...v0.35.66) (2024-08-06)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.65](https://github.com/cube-js/cube/compare/v0.35.64...v0.35.65) (2024-07-26)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.64](https://github.com/cube-js/cube/compare/v0.35.63...v0.35.64) (2024-07-24)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.63](https://github.com/cube-js/cube/compare/v0.35.62...v0.35.63) (2024-07-24)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.62](https://github.com/cube-js/cube/compare/v0.35.61...v0.35.62) (2024-07-22)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.61](https://github.com/cube-js/cube/compare/v0.35.60...v0.35.61) (2024-07-19)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.60](https://github.com/cube-js/cube/compare/v0.35.59...v0.35.60) (2024-07-17)
+
+
+### Bug Fixes
+
+* **server-core:** Headers sent multiple times from dev-server handlers crashes it ([#8463](https://github.com/cube-js/cube/issues/8463)) ([45bbb8a](https://github.com/cube-js/cube/commit/45bbb8a739b4d9f079ba78fa48365632ea2eef8c))
+
+
+
+
+
+## [0.35.59](https://github.com/cube-js/cube/compare/v0.35.58...v0.35.59) (2024-07-13)
+
+
+### Bug Fixes
+
+* Compile data model only once per each version ([#8452](https://github.com/cube-js/cube/issues/8452)) ([2b3bdcd](https://github.com/cube-js/cube/commit/2b3bdcdf451029d056c05c60c57e1c3ec9aca1be))
+
+
+
+
+
+## [0.35.58](https://github.com/cube-js/cube/compare/v0.35.57...v0.35.58) (2024-07-10)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
+## [0.35.57](https://github.com/cube-js/cube/compare/v0.35.56...v0.35.57) (2024-07-05)
+
+**Note:** Version bump only for package @cubejs-backend/server-core
+
+
+
+
+
 ## [0.35.56](https://github.com/cube-js/cube/compare/v0.35.55...v0.35.56) (2024-07-03)
 
 **Note:** Version bump only for package @cubejs-backend/server-core

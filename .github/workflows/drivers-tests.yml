@@ -89,7 +89,7 @@ jobs:
         target: [ "x86_64-unknown-linux-gnu" ]
       fail-fast: false
     container:
-      image: cubejs/rust-cross:${{ matrix.target }}-25062024
+      image: cubejs/rust-cross:${{ matrix.target }}-15082024
 
     steps:
       - name: Checkout
@@ -97,7 +97,7 @@ jobs:
       - name: Install Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly-2023-12-13
+          toolchain: nightly-2024-07-15
           # override: true # this is by default on
           rustflags: ""
           components: rustfmt
@@ -154,21 +154,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-
       - name: Download native build
         uses: actions/download-artifact@v4
         with:
           name: backend-native
           path: packages/cubejs-backend-native/
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          version: v0.10.3
-
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

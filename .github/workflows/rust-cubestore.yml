@@ -12,6 +12,11 @@ on:
       - '.github/workflows/rust-cubestore.yml'
       - 'rust/cubestore/**'
 
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  RUSTUP_MAX_RETRIES: 10
+
 jobs:
   debian:
     name: Debian Rust ${{ matrix.rust }}
@@ -90,16 +95,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          version: v0.9.1
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.target }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.target }}-buildx-
+        uses: docker/setup-buildx-action@v3
       - name: Build only
         uses: docker/build-push-action@v3
         with:
@@ -108,8 +104,8 @@ jobs:
           platforms: ${{ matrix.platforms }}
           build-args: ${{ matrix.build-args }}
           push: false
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   cubestore:
     runs-on: ${{ matrix.os }}
@@ -154,7 +150,7 @@ jobs:
         run: vcpkg integrate install; vcpkg install openssl:x64-windows
       - name: Instal LLVM for Windows
         if: ${{ startsWith(matrix.os, 'windows') }}
-        run: choco install -y --force llvm --version 18.1.2
+        run: choco install -y --force llvm --version 18.1.6
       - name: Set Env Variables for Windows
         uses: allenevans/set-env@v3.0.0
         if: ${{ startsWith(matrix.os, 'windows') }}
@@ -166,7 +162,7 @@ jobs:
           LIBCLANG_PATH: 'C:\Program Files\LLVM\bin'
       - name: Build with Cargo
         run: |
-          cd rust/cubestore && cargo build --release --target=${{ matrix.target }}
+          cd rust/cubestore && cargo build --release --target=${{ matrix.target }} -p cubestore
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
         if: ${{ matrix.compress }}
@@ -224,7 +220,7 @@ jobs:
             compress: false
       fail-fast: false
     container:
-      image: cubejs/rust-cross:${{ matrix.target }}-25062024
+      image: cubejs/rust-cross:${{ matrix.target }}-15082024
     steps:
       - uses: actions/checkout@v4
       - name: Setup Rust toolchain
@@ -242,7 +238,7 @@ jobs:
           key: target-${{ matrix.target }}
       - name: Build with Cargo
         run: |
-          cd rust/cubestore && cargo build --release --target=${{ matrix.target }}
+          cd rust/cubestore && cargo build --release --target=${{ matrix.target }} -p cubestore
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
         if: ${{ matrix.compress }}

@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.67](https://github.com/cube-js/cube/compare/v0.35.66...v0.35.67) (2024-08-07)
+
+
+### Features
+
+* **cubesqlplanner:** Native SQL planner implementation first steps ([#8506](https://github.com/cube-js/cube/issues/8506)) ([fab9c48](https://github.com/cube-js/cube/commit/fab9c4801de41a0d3d05331c5ca85c3e0cdd6266))
+* **cubesql:** Support push down cast type templates ([556ca7c](https://github.com/cube-js/cube/commit/556ca7c67b280b18221cb6748cfe20f841b1a7b9))
+
+
+
+
+
+## [0.35.66](https://github.com/cube-js/cube/compare/v0.35.65...v0.35.66) (2024-08-06)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.65](https://github.com/cube-js/cube/compare/v0.35.64...v0.35.65) (2024-07-26)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.64](https://github.com/cube-js/cube/compare/v0.35.63...v0.35.64) (2024-07-24)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.63](https://github.com/cube-js/cube/compare/v0.35.62...v0.35.63) (2024-07-24)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.62](https://github.com/cube-js/cube/compare/v0.35.61...v0.35.62) (2024-07-22)
+
+
+### Bug Fixes
+
+* **schema-compiler:** Replace all toDateTime with toDateTime64 in ClickHouseQuery adapter to handle dates before 1970 ([#8390](https://github.com/cube-js/cube/issues/8390)) Thanks @Ilex4524 ! )j ([f6cff1a](https://github.com/cube-js/cube/commit/f6cff1a8a8dc510ad365ff53c02b1b15a8ba70f2))
+
+
+
+
+
+## [0.35.61](https://github.com/cube-js/cube/compare/v0.35.60...v0.35.61) (2024-07-19)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.60](https://github.com/cube-js/cube/compare/v0.35.59...v0.35.60) (2024-07-17)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.59](https://github.com/cube-js/cube/compare/v0.35.58...v0.35.59) (2024-07-13)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.58](https://github.com/cube-js/cube/compare/v0.35.57...v0.35.58) (2024-07-10)
+
+**Note:** Version bump only for package @cubejs-backend/schema-compiler
+
+
+
+
+
+## [0.35.57](https://github.com/cube-js/cube/compare/v0.35.56...v0.35.57) (2024-07-05)
+
+
+### Features
+
+* **cubesql:** Remove implicit order by clause ([#8380](https://github.com/cube-js/cube/issues/8380)) ([3e7d325](https://github.com/cube-js/cube/commit/3e7d325aadff1a572953d843394f55577aef0357))
+
+
+
+
+
 ## [0.35.56](https://github.com/cube-js/cube/compare/v0.35.55...v0.35.56) (2024-07-03)
 
 **Note:** Version bump only for package @cubejs-backend/schema-compiler
