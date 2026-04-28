@@ -4,7 +4,7 @@
  * @fileoverview The `SnowflakeDriver` and related types declaration.
  */
 
-import { assertDataSource, getEnv, } from '@cubejs-backend/shared';
+import { assertDataSource, getEnv } from '@cubejs-backend/shared';
 import snowflake, { Column, Connection, RowStatement } from 'snowflake-sdk';
 import {
   BaseDriver,
@@ -20,81 +20,18 @@ import {
   TableStructure,
   UnloadOptions,
 } from '@cubejs-backend/base-driver';
-import { formatToTimeZone } from 'date-fns-timezone';
 import fs from 'fs/promises';
 import crypto from 'crypto';
 import { S3ClientConfig } from '@aws-sdk/client-s3';
 import { HydrationMap, HydrationStream } from './HydrationStream';
+import { hydrators } from './type-parsers';
 
 const SUPPORTED_BUCKET_TYPES = ['s3', 'gcs', 'azure'];
-
-type HydrationConfiguration = {
-  types: string[], toValue: (column: Column) => ((value: any) => any) | null
-};
 
 type UnloadResponse = {
   // eslint-disable-next-line camelcase
   rows_unloaded: string
 };
-
-// It's not possible to declare own map converters by passing config to snowflake-sdk
-const hydrators: HydrationConfiguration[] = [
-  {
-    types: ['fixed', 'real'],
-    toValue: (column) => {
-      if (column.isNullable()) {
-        return (value) => {
-          // We use numbers as strings by fetchAsString
-          if (value === 'NULL') {
-            return null;
-          }
-
-          return value;
-        };
-      }
-
-      // Nothing to fix, let's skip this field
-      return null;
-    },
-  },
-  {
-    // The TIMESTAMP_* variation associated with TIMESTAMP, default to TIMESTAMP_NTZ
-    types: [
-      'date',
-      // TIMESTAMP_LTZ internally stores UTC time with a specified precision.
-      'timestamp_ltz',
-      // TIMESTAMP_NTZ internally stores “wallclock” time with a specified precision.
-      // All operations are performed without taking any time zone into account.
-      'timestamp_ntz',
-      // TIMESTAMP_TZ internally stores UTC time together with an associated time zone offset.
-      // When a time zone is not provided, the session time zone offset is used.
-      'timestamp_tz'
-    ],
-    toValue: () => (value) => {
-      if (!value) {
-        return null;
-      }
-
-      return formatToTimeZone(
-        value,
-        'YYYY-MM-DDTHH:mm:ss.SSS',
-        {
-          timeZone: 'UTC'
-        }
-      );
-    },
-  },
-  {
-    types: ['object'], // Workaround for HLL_SNOWFLAKE
-    toValue: () => (value) => {
-      if (!value) {
-        return null;
-      }
-
-      return JSON.stringify(value);
-    },
-  }
-];
 
 const SnowflakeToGenericType: Record<string, GenericDataBaseType> = {
   // It's a limitation for now, because anyway we don't work with JSON objects in Cube Store.
@@ -663,7 +600,12 @@ export class SnowflakeDriver extends BaseDriver implements DriverInterface {
     return new Promise((resolve, reject) => connection.execute({
       sqlText: `${sql} LIMIT 0`,
       binds: <string[] | undefined>params,
-      fetchAsString: ['Number'],
+      fetchAsString: [
+        // It's not possible to store big numbers in Number, It's a common way how to handle it in Cube
+        'Number',
+        // VARIANT, OBJECT, ARRAY are mapped to JSON type in Snowflake SDK
+        'JSON'
+      ],
       complete: (err, stmt) => {
         if (err) {
           reject(err);
@@ -876,12 +818,18 @@ export class SnowflakeDriver extends BaseDriver implements DriverInterface {
     return new Promise((resolve, reject) => connection.execute({
       sqlText: query,
       binds: <string[] | undefined>values,
-      fetchAsString: ['Number'],
+      fetchAsString: [
+        // It's not possible to store big numbers in Number, It's a common way how to handle it in Cube
+        'Number',
+        // VARIANT, OBJECT, ARRAY are mapped to JSON type in Snowflake SDK
+        'JSON'
+      ],
       complete: (err, stmt, rows) => {
         if (err) {
           reject(err);
           return;
         }
+
         const hydrationMap = this.generateHydrationMap(stmt.getColumns());
         const types: {name: string, type: string}[] =
           this.getTypes(stmt);
@@ -913,7 +861,7 @@ export class SnowflakeDriver extends BaseDriver implements DriverInterface {
       sqlText: query,
       binds: <string[] | undefined>values,
       fetchAsString: [
-        // It's not possible to store big numbers in Number, It's a common way how to handle it in Cube.js
+        // It's not possible to store big numbers in Number, It's a common way how to handle it in Cube
         'Number',
         // VARIANT, OBJECT, ARRAY are mapped to JSON type in Snowflake SDK
         'JSON'
@@ -999,7 +947,12 @@ export class SnowflakeDriver extends BaseDriver implements DriverInterface {
     return new Promise((resolve, reject) => connection.execute({
       sqlText: query,
       binds: <string[] | undefined>values,
-      fetchAsString: ['Number'],
+      fetchAsString: [
+        // It's not possible to store big numbers in Number, It's a common way how to handle it in Cube
+        'Number',
+        // VARIANT, OBJECT, ARRAY are mapped to JSON type in Snowflake SDK
+        'JSON'
+      ],
       complete: (err, stmt, rows) => {
         if (err) {
           reject(err);
